@@ -16,14 +16,14 @@ namespace flerwin_api.Controllers
         public string Get()
         {
             return "asdf";
-		}
+        }
 
         [HttpGet]
         [Route("two")]
         public string GetTwo()
         {
             return "this is two";
-		} 
+        } 
     }
 }
 
