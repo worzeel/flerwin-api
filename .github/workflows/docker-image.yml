@@ -20,14 +20,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: login to docker
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      
-    - name: Get date of the build
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
-      
+      run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+            
     - name: Build docker image
-      run: docker build -t $DOCKER_USER/$DOCKER_REPO:${{ steps.date.outputs.date }} .
+      run: docker build -t $DOCKER_USER/$DOCKER_REPO:latest .
       
     - name: Push to dockerhub
-      run: docker push $DOCKER_USER/$DOCKER_REPO:${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_USER/$DOCKER_REPO:latest
