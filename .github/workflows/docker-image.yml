@@ -1,0 +1,33 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    
+env:
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
+
+jobs:
+
+  build_and_push:
+    name: Build and push docker image to dockerhub
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: login to docker
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      
+    - name: Get date of the build
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+      
+    - name: Build docker image
+      run: docker build -t $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }} .
+      
+    - name: Push to dockerhub
+      run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
